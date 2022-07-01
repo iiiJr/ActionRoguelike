@@ -78,6 +78,15 @@ void ASCharacter::MoveRight(float Value)
 
 void ASCharacter::PrimaryAttack()
 {
+
+	PlayAnimMontage(AttackAnim);
+	
+	//动画播放完后延时攻击
+	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::PrimaryAttack_TimeElapsed, 0.15f);
+}
+
+void ASCharacter::PrimaryAttack_TimeElapsed()
+{
 	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 	FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
 
