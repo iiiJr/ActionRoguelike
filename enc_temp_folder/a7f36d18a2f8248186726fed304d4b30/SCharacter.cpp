@@ -83,10 +83,6 @@ void ASCharacter::PrimaryAttack()
 	
 	//动画播放完后延时攻击
 	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::PrimaryAttack_TimeElapsed, 0.15f);
-
-
-	// 角色死亡时取消攻击
-	// GetWorldTimerManager().ClearTimer(TimerHandle_PrimaryAttack);
 }
 
 void ASCharacter::PrimaryAttack_TimeElapsed()
