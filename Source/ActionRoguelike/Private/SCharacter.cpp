@@ -6,6 +6,8 @@
 #include "Camera/CameraComponent.h"
 #include "DrawDebugHelpers.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "SAttributeComponent.h"
+
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -19,6 +21,9 @@ ASCharacter::ASCharacter()
 
 	CamerComp = CreateDefaultSubobject<UCameraComponent>("CamerComp");
 	CamerComp->SetupAttachment(SpringArmComp);
+
+	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp"); 
+
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationYaw = false;
@@ -56,6 +61,7 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ASCharacter::Jump);
+	// PlayerInputComponent->BindAction("Squat", IE_Pressed, this, &ASCharacter::Squat);
 	
 }
 
@@ -94,13 +100,17 @@ void ASCharacter::PrimaryAttack()
 
 void ASCharacter::PrimaryAttack_TimeElapsed()
 {
-	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
-	FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
+	if (ensure(ProjectileClass)) {
 
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 
-	SpawnParams.Instigator = this;
+		FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
 
-	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+		SpawnParams.Instigator = this;
+
+		GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
+	}
 }
